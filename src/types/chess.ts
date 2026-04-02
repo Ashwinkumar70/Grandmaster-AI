@@ -32,9 +32,9 @@ export const TIME_CONTROLS: TimeControl[] = [
   { name: 'Classical', minutes: 30, increment: 0 },
 ];
 
-export const DIFFICULTY_LEVELS: Record<Difficulty, { depth: number; skill: number }> = {
-  'Beginner': { depth: 2, skill: 0 },
-  'Intermediate': { depth: 8, skill: 5 },
-  'Advanced': { depth: 12, skill: 15 },
-  'Grandmaster': { depth: 20, skill: 20 },
+export const DIFFICULTY_LEVELS: Record<Difficulty, { depth: number; skill: number; movetime?: number }> = {
+  'Beginner': { depth: 2, skill: 0, movetime: 500 },
+  'Intermediate': { depth: 8, skill: 5, movetime: 1500 },
+  'Advanced': { depth: 12, skill: 15, movetime: 3000 },
+  'Grandmaster': { depth: 20, skill: 20, movetime: 5000 },
 };

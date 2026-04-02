@@ -120,9 +120,9 @@ export default function App() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col xl:flex-row items-start justify-center gap-8 p-4 lg:p-8 max-w-[1800px] mx-auto w-full">
+      <main className="flex-1 flex flex-col xl:flex-row items-start justify-center gap-4 lg:gap-8 px-0 py-4 sm:px-4 lg:p-8 max-w-[1800px] mx-auto w-full">
         {/* Left Panel: Game Info & Controls */}
-        <div className="flex flex-col gap-6 w-full xl:w-[380px] order-2 xl:order-1 sticky top-28">
+        <div className="flex flex-col gap-6 w-full xl:w-[380px] order-2 xl:order-1 sticky top-28 px-4 sm:px-0">
           <div className="flex items-center justify-between glass-panel p-5 rounded-2xl">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-neutral-800 rounded-2xl flex items-center justify-center border border-white/5">
@@ -161,6 +161,7 @@ export default function App() {
             onMove={handleMove}
             orientation={orientation}
             lastMove={gameState.lastMove}
+            isThinking={isCalculating}
           />
           
           <AnimatePresence>
@@ -188,8 +189,7 @@ export default function App() {
           </AnimatePresence>
         </div>
 
-        {/* Right Panel: History */}
-        <div className="w-full xl:w-[400px] h-[600px] xl:h-[820px] order-3 xl:sticky xl:top-28">
+        <div className="w-full xl:w-[400px] h-[600px] xl:h-[820px] order-3 xl:sticky xl:top-28 px-4 sm:px-0">
           <MoveHistory history={gameState.history} />
         </div>
       </main>

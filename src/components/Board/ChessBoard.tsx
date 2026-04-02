@@ -9,11 +9,13 @@ interface ChessBoardProps {
   onMove: (from: string, to: string) => void;
   orientation?: 'white' | 'black';
   lastMove?: { from: string; to: string };
+  isThinking?: boolean;
 }
 
-export const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, orientation = 'white', lastMove }) => {
+export const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, orientation = 'white', lastMove, isThinking }) => {
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [hoveredSquare, setHoveredSquare] = useState<string | null>(null);
+  const [draggingSquare, setDraggingSquare] = useState<string | null>(null);
 
   const board = useMemo(() => {
     const b = game.board();
@@ -52,7 +54,11 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, orientatio
   };
 
   return (
-    <div className="relative aspect-square w-full max-w-[800px] glass-panel rounded-2xl p-2 sm:p-4 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]">
+    <div className={cn(
+      "relative aspect-square w-full max-w-[800px] transition-all duration-500",
+      "sm:glass-panel sm:rounded-2xl sm:p-4 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]",
+      "p-0 rounded-none bg-transparent border-none"
+    )}>
       <div className="grid grid-cols-8 grid-rows-8 w-full h-full rounded-lg overflow-hidden border-4 border-white/5 shadow-inner">
         {board.map((row, rowIndex) => (
           row.map((piece, colIndex) => {
@@ -66,6 +72,8 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, orientatio
             return (
               <motion.div
                 key={squareName}
+                id={squareName}
+                data-square={squareName}
                 onClick={() => handleSquareClick(squareName)}
                 onMouseEnter={() => setHoveredSquare(squareName)}
                 onMouseLeave={() => setHoveredSquare(null)}
@@ -74,7 +82,8 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, orientatio
                   isDark ? "bg-[#2a3439]" : "bg-[#e8edf0]",
                   isSelected && "bg-yellow-400/40 ring-4 ring-yellow-400/50 z-10",
                   isLastMove && "after:absolute after:inset-0 after:bg-blue-400/20",
-                  isCheck && "bg-red-500/40 animate-pulse"
+                  isCheck && "bg-red-500/40 animate-pulse",
+                  draggingSquare === squareName && "opacity-50"
                 )}
               >
                 {/* Square Depth Effect */}
@@ -120,6 +129,21 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, orientatio
                       type={piece.type}
                       color={piece.color}
                       square={squareName}
+                      isDragging={draggingSquare === squareName}
+                      onDragStart={() => {
+                        if (piece.color === game.turn()) {
+                          setDraggingSquare(squareName);
+                          setSelectedSquare(squareName);
+                        }
+                      } }
+                      onDragEnd={(e, info) => {
+                        setDraggingSquare(null);
+                        const element = document.elementFromPoint(info.point.x, info.point.y);
+                        const targetSquare = element?.closest('[data-square]')?.getAttribute('data-square');
+                        if (targetSquare && targetSquare !== squareName) {
+                          onMove(squareName, targetSquare);
+                        }
+                      } }
                     />
                   )}
                 </AnimatePresence>
@@ -128,6 +152,22 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, orientatio
           })
         ))}
       </div>
+
+      <AnimatePresence>
+        {isThinking && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-40 bg-black/5 backdrop-blur-[1px] pointer-events-none flex items-center justify-center rounded-2xl"
+          >
+             <div className="bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 flex items-center gap-3 shadow-2xl">
+               <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+               <span className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-400">Grandmaster is Thinking</span>
+             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

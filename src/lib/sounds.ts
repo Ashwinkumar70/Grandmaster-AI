@@ -1,12 +1,12 @@
 import { Howl } from 'howler';
 
 const SOUND_URLS = {
-  move: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',
-  capture: 'https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3',
-  check: 'https://assets.mixkit.co/active_storage/sfx/2573/2573-preview.mp3',
-  castle: 'https://assets.mixkit.co/active_storage/sfx/2574/2574-preview.mp3',
-  promote: 'https://assets.mixkit.co/active_storage/sfx/2575/2575-preview.mp3',
-  gameEnd: 'https://assets.mixkit.co/active_storage/sfx/2576/2576-preview.mp3',
+  move: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3',
+  capture: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3',
+  check: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/check.mp3',
+  castle: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/castle.mp3',
+  promote: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/promote.mp3',
+  gameEnd: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-end.mp3',
 };
 
 class SoundManager {

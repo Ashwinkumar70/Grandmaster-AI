@@ -27,7 +27,9 @@ export const useStockfish = () => {
         const line = e.data;
         if (typeof line !== 'string') return;
         
-        if (line.startsWith('bestmove')) {
+        if (line === 'readyok') {
+          setIsReady(true);
+        } else if (line.startsWith('bestmove')) {
           const move = line.split(' ')[1];
           setIsCalculating(false);
           if (onMoveCallback.current) {
@@ -58,7 +60,6 @@ export const useStockfish = () => {
       workerRef.current = worker;
       worker.postMessage('uci');
       worker.postMessage('isready');
-      setIsReady(true);
     } catch (err) {
       console.error('Failed to initialize Stockfish worker:', err);
     }
@@ -78,11 +79,11 @@ export const useStockfish = () => {
     onMoveCallback.current = callback;
     setIsCalculating(true);
 
-    const { depth, skill } = DIFFICULTY_LEVELS[difficulty];
+    const { depth, skill, movetime } = DIFFICULTY_LEVELS[difficulty];
     
     workerRef.current.postMessage(`setoption name Skill Level value ${skill}`);
     workerRef.current.postMessage(`position fen ${fen}`);
-    workerRef.current.postMessage(`go depth ${depth}`);
+    workerRef.current.postMessage(`go depth ${depth}${movetime ? ` movetime ${movetime}` : ''}`);
   }, []);
 
   return { isReady, isCalculating, evaluation, getBestMove };

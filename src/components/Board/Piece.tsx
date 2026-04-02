@@ -7,6 +7,8 @@ interface PieceProps {
   color: string;
   square: string;
   isDragging?: boolean;
+  onDragStart?: () => void;
+  onDragEnd?: (event: any, info: any) => void;
 }
 
 const PIECE_IMAGES: Record<string, string> = {
@@ -24,13 +26,18 @@ const PIECE_IMAGES: Record<string, string> = {
   'bK': 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg',
 };
 
-export const Piece: React.FC<PieceProps> = ({ type, color, square, isDragging }) => {
+export const Piece: React.FC<PieceProps> = ({ type, color, square, isDragging, onDragStart, onDragEnd }) => {
   const pieceKey = `${color}${type.toUpperCase()}`;
   const image = PIECE_IMAGES[pieceKey];
 
   return (
     <motion.div
       layoutId={`${color}${type}-${square}`}
+      drag
+      dragElastic={0.2}
+      dragMomentum={false}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{
         scale: isDragging ? 1.25 : 1,
